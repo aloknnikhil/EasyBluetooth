@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_paired"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#2196F3"
+        android:minHeight="?attr/actionBarSize">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginRight="20dp"
+            android:paddingLeft="@dimen/abc_action_bar_subtitle_bottom_margin_material">
+
+            <TextView
+                android:id="@+id/toolbar_paired_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="List of Paired Devices"
+                android:textSize="@dimen/abc_text_size_title_material_toolbar"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_paired"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/paired_devices_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:dividerHeight="2dp"
+            android:divider="@android:color/transparent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_unpaired"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="#2196F3"
+                android:minHeight="?attr/actionBarSize">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginRight="20dp"
+                    android:paddingLeft="@dimen/abc_action_bar_subtitle_bottom_margin_material">
+
+                    <TextView
+                        android:id="@+id/toolbar_unpaired_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="New Devices"
+                        android:textSize="@dimen/abc_text_size_title_material_toolbar"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/scan_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_toLeftOf="@+id/cancel_button"
+                        android:text="SCAN"
+                        android:textSize="@dimen/abc_text_size_subtitle_material_toolbar"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/cancel_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="CANCEL"
+                        android:textSize="@dimen/abc_text_size_subtitle_material_toolbar"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+            </android.support.v7.widget.Toolbar>
+
+            <ListView
+                android:id="@+id/unpaired_devices_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:dividerHeight="5dp"
+                android:divider="@android:color/transparent"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

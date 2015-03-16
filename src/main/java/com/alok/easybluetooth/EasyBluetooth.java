@@ -1,17 +1,38 @@
 package com.alok.easybluetooth;
 
-import android.content.Context;
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.Toast;
+
+import com.alok.easybluetooth.models.OnMessageReceivedListener;
+import com.alok.easybluetooth.utils.BTDeviceListActivity;
 
 /**
  * Created by Alok on 3/15/2015.
  */
 public class EasyBluetooth {
 
+    public final static int REQUEST_ENABLE_BT = 1515;
+    public final static int REQUEST_CONNECT_DEVICE = 5151;
+    public final static String EXTRA_DEVICE_ADDRESS = "device_address";
+
     private boolean connected = false;
     private boolean enabled = false;
     private boolean discoverable = false;
+    private OnMessageReceivedListener onMessageReceivedListener = null;
+    private Activity activity;
+    private BluetoothAdapter btAdapter;
+    private BTService btService;
+
+    public EasyBluetooth(Activity activity, OnMessageReceivedListener onMessageReceivedListener) {
+        this.activity = activity;
+        this.btAdapter = BluetoothAdapter.getDefaultAdapter();
+        registerReceiveListener(onMessageReceivedListener);
+        btService = new BTService(activity, btHandler);
+    }
 
     // The Handler that gets information back from the BluetoothChatService
     private final Handler btHandler = new Handler() {
@@ -31,6 +52,7 @@ public class EasyBluetooth {
                     }
                     break;
                 case BTService.MESSAGE_READ:
+                    EasyBluetooth.this.onMessageReceivedListener.onReceived((String) msg.obj);
                     break;
                 case BTService.MESSAGE_DEVICE_NAME:
                     break;
@@ -38,6 +60,53 @@ public class EasyBluetooth {
         }
     };
 
-    private void sendBTMessage(String message) {
+    public void enableBluetooth()   {
+        if(btAdapter == null)   {
+            Toast.makeText(activity, "Your device does not support Bluetooth", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (!btAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            activity.startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+            enabled = true;
+        }
+    }
+
+
+    public void sendMessage(String btMessage) {
+
+        // Check that we're actually connected before trying anything
+        if (btService.getState() != BTService.STATE_CONNECTED) {
+            Toast.makeText(activity, "Not connected", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Check that there's actually something to send
+        if (btMessage.length() > 0) {
+            // Get the message bytes and tell the BluetoothChatService to write
+            byte[] send = btMessage.getBytes();
+            btService.write(send);
+        }
+    }
+
+    public void registerReceiveListener(OnMessageReceivedListener listener)    {
+        this.onMessageReceivedListener = listener;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public boolean isDiscoverable() {
+        return discoverable;
+    }
+
+    public void scanForDevices()    {
+        Intent serverIntent = new Intent(activity, BTDeviceListActivity.class);
+        activity.startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
     }
 }
