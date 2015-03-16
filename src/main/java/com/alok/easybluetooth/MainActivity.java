@@ -74,11 +74,6 @@ public class MainActivity extends ActionBarActivity implements OnMessageReceived
     }
 
     @Override
-    public void onPaired() {
-
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case EasyBluetooth.REQUEST_CONNECT_DEVICE:
