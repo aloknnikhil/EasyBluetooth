@@ -6,4 +6,6 @@ package com.alok.easybluetooth.models;
 public interface OnMessageReceivedListener {
 
     public void onReceived(String btMessage);
+
+    public void onPaired();
 }

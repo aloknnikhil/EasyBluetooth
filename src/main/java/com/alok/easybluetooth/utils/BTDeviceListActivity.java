@@ -54,11 +54,11 @@ public class BTDeviceListActivity extends ActionBarActivity {
 
         if(toolbar != null) {
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
 
-        mPairedDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.bt_device_list_activity);
-        mNewDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.bt_device_list_activity);
+        mPairedDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.bt_device_name);
+        mNewDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.bt_device_name);
 
         // Find and set up the ListView for paired devices
         ListView pairedListView = (ListView) findViewById(R.id.paired_devices_list);
@@ -95,6 +95,17 @@ public class BTDeviceListActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Make sure we're not doing discovery anymore
+        if (mBtAdapter != null) {
+            mBtAdapter.cancelDiscovery();
+        }
+        // Unregister broadcast listeners
+        this.unregisterReceiver(mReceiver);
+    }
+
     private void doDiscovery() {
         // Indicate scanning in the title
         setSupportProgressBarIndeterminateVisibility(true);
@@ -123,7 +134,7 @@ public class BTDeviceListActivity extends ActionBarActivity {
                 }
                 // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                setProgressBarIndeterminateVisibility(false);
+                setSupportProgressBarIndeterminateVisibility(false);
                 if (mNewDevicesArrayAdapter.getCount() == 0) {
                     String noDevices = "No devices found";
                     mNewDevicesArrayAdapter.add(noDevices);

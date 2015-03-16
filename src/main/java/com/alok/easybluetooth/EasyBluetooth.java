@@ -2,13 +2,17 @@ package com.alok.easybluetooth;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alok.easybluetooth.models.OnMessageReceivedListener;
 import com.alok.easybluetooth.utils.BTDeviceListActivity;
+
+import java.lang.reflect.Method;
 
 /**
  * Created by Alok on 3/15/2015.
@@ -86,6 +90,29 @@ public class EasyBluetooth {
             // Get the message bytes and tell the BluetoothChatService to write
             byte[] send = btMessage.getBytes();
             btService.write(send);
+        }
+    }
+
+    public void connectDevice(String address)   {
+
+        // Get the BluetoothDevice object
+        BluetoothDevice device = btAdapter.getRemoteDevice(address);
+
+        //device.createBond();
+
+        // Attempt to connect to the device
+        btService.connect(device);
+    }
+
+    //For Pairing
+    private void pairDevice(BluetoothDevice device) {
+        try {
+            Log.d("pairDevice()", "Start Pairing...");
+            Method m = device.getClass().getMethod("createBond", (Class[]) null);
+            m.invoke(device, (Object[]) null);
+            Log.d("pairDevice()", "Pairing finished.");
+        } catch (Exception e) {
+            Log.e("pairDevice()", e.getMessage());
         }
     }
 
